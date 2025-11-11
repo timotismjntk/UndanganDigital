@@ -36,12 +36,6 @@ const Hero = () => {
           </span>
         </h1>
 
-        <div className="mt-8 inline-block bg-card/80 backdrop-blur-sm px-8 py-4 rounded-2xl shadow-festive border border-border">
-          <p className="text-xl md:text-2xl font-medium text-primary">
-            Perayaan Natal & Ibadah Syukur
-          </p>
-        </div>
-
         <div className="mt-12 flex items-center justify-center gap-4 text-sm text-muted-foreground">
           <div className="w-20 h-px bg-border"></div>
           <span>Scroll untuk melanjutkan</span>

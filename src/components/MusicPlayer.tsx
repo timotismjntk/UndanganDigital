@@ -9,9 +9,9 @@ const MusicPlayer = () => {
 
   useEffect(() => {
     // Create audio element
-    audioRef.current = new Audio('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3');
+    audioRef.current = new Audio('https://raw.githubusercontent.com/timotismjntk/joyful-christmas-invite/refs/heads/main/src/audio/backsound.mp3');
     audioRef.current.loop = true;
-    audioRef.current.volume = 0.3;
+    audioRef.current.volume = 0.6;
 
     // Auto-play attempt
     const playAudio = async () => {

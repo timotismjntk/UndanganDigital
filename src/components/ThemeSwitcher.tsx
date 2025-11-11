@@ -7,9 +7,9 @@ const ThemeSwitcher = () => {
   const { theme, setTheme } = useTheme();
 
   const themes = [
+    { id: 'modern' as const, label: 'Modern', icon: TreePine, color: 'christmas-green' },
     { id: 'classic' as const, label: 'Klasik', icon: Sparkles, color: 'christmas-red' },
     { id: 'snowy' as const, label: 'Salju', icon: Snowflake, color: 'primary' },
-    { id: 'modern' as const, label: 'Modern', icon: TreePine, color: 'christmas-green' },
   ];
 
   return (

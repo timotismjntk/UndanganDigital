@@ -8,7 +8,7 @@ const Footer = () => {
 
   const handleShare = async () => {
     const url = window.location.href;
-    const text = 'Undangan Natal - Pentahbisan Gedung Gereja GBI Jalan Angkatan 66';
+    const text = 'Undangan - Pentahbisan dan Ucapan Syukur Memasuki Gedung Gereja GBI Jalan Angkatan 66';
 
     if (navigator.share) {
       try {
@@ -62,7 +62,7 @@ const Footer = () => {
 
         <div className="pt-8 border-t border-border">
           <p className="text-sm text-muted-foreground">
-            © 2025 GBI Jalan Angkatan 66 • Dibuat dengan ❤️
+            © 2025 Timotius Tech • Dibuat dengan ❤️
           </p>
         </div>
       </div>

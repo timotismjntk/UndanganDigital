@@ -63,7 +63,7 @@ const EventDetails = () => {
         <Card className="overflow-hidden shadow-festive border-2">
           <div className="aspect-video w-full">
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3986.9558!2d99.1234!3d2.1234!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMsKwMDcnMjQuMiJOIDk5wrAwNycyNC4yIkU!5e0!3m2!1sid!2sid!4v1234567890"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3985.8224018724763!2d99.64648520987068!3d2.564517297402909!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3032711b560f83a1%3A0x994e122c4788d6d5!2sGBI%20(Gereja%20Bethel%20Indonesia)%20Angkatan%2066!5e0!3m2!1sid!2sid!4v1762851443947!5m2!1sid!2sid"
               width="100%"
               height="100%"
               style={{ border: 0 }}
