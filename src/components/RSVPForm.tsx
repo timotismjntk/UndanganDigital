@@ -5,8 +5,10 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Heart, MessageCircle } from 'lucide-react';
+import { Heart, MessageCircle, Users, UserCheck, UserX } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { db } from '@/lib/firebase';
+import { collection, addDoc, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 interface Message {
   id: string;
@@ -21,16 +23,23 @@ const RSVPForm = () => {
   const [message, setMessage] = useState('');
   const [attendance, setAttendance] = useState('yes');
   const [messages, setMessages] = useState<Message[]>([]);
+  const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
-    const stored = localStorage.getItem('christmas-messages');
-    if (stored) {
-      setMessages(JSON.parse(stored));
-    }
+    const q = query(collection(db, 'rsvp-messages'), orderBy('timestamp', 'desc'));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const fetchedMessages: Message[] = [];
+      snapshot.forEach((doc) => {
+        fetchedMessages.push({ id: doc.id, ...doc.data() } as Message);
+      });
+      setMessages(fetchedMessages);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!name.trim() || !message.trim()) {
@@ -42,27 +51,36 @@ const RSVPForm = () => {
       return;
     }
 
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      name: name.trim(),
-      message: message.trim(),
-      attendance,
-      timestamp: Date.now(),
-    };
+    setLoading(true);
+    try {
+      await addDoc(collection(db, 'rsvp-messages'), {
+        name: name.trim(),
+        message: message.trim(),
+        attendance,
+        timestamp: Date.now(),
+      });
 
-    const updatedMessages = [newMessage, ...messages];
-    setMessages(updatedMessages);
-    localStorage.setItem('christmas-messages', JSON.stringify(updatedMessages));
+      toast({
+        title: "Terima kasih!",
+        description: "Ucapan Anda telah terkirim.",
+      });
 
-    toast({
-      title: "Terima kasih!",
-      description: "Ucapan Anda telah terkirim.",
-    });
-
-    setName('');
-    setMessage('');
-    setAttendance('yes');
+      setName('');
+      setMessage('');
+      setAttendance('yes');
+    } catch (error) {
+      toast({
+        title: "Gagal mengirim",
+        description: "Terjadi kesalahan, silakan coba lagi.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const attendingCount = messages.filter(m => m.attendance === 'yes').length;
+  const notAttendingCount = messages.filter(m => m.attendance === 'no').length;
 
   return (
     <section className="py-20 px-4 bg-card/30 relative overflow-hidden">
@@ -118,18 +136,35 @@ const RSVPForm = () => {
               </RadioGroup>
             </div>
 
-            <Button type="submit" className="w-full text-lg py-6" size="lg">
+            <Button type="submit" className="w-full text-lg py-6" size="lg" disabled={loading}>
               <Heart className="w-5 h-5 mr-2" />
-              Kirim Ucapan
+              {loading ? 'Mengirim...' : 'Kirim Ucapan'}
             </Button>
           </form>
         </Card>
 
         {messages.length > 0 && (
-          <div className="space-y-4">
-            <h3 className="text-2xl font-semibold flex items-center gap-2 mb-6">
+          <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              <Card className="p-4 text-center border-2 shadow-card">
+                <Users className="w-8 h-8 mx-auto mb-2 text-primary" />
+                <p className="text-3xl font-bold">{messages.length}</p>
+                <p className="text-sm text-muted-foreground">Total Ucapan</p>
+              </Card>
+              <Card className="p-4 text-center border-2 shadow-card bg-primary/5">
+                <UserCheck className="w-8 h-8 mx-auto mb-2 text-primary" />
+                <p className="text-3xl font-bold">{attendingCount}</p>
+                <p className="text-sm text-muted-foreground">Hadir</p>
+              </Card>
+              <Card className="p-4 text-center border-2 shadow-card">
+                <UserX className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
+                <p className="text-3xl font-bold">{notAttendingCount}</p>
+                <p className="text-sm text-muted-foreground">Tidak Hadir</p>
+              </Card>
+            </div>
+            <h3 className="text-2xl font-semibold flex items-center gap-2">
               <MessageCircle className="w-6 h-6 text-primary" />
-              Ucapan dari Tamu ({messages.length})
+              Ucapan dari Tamu
             </h3>
             <div className="grid gap-4 max-h-[600px] overflow-y-auto pr-2">
               {messages.map((msg) => (
