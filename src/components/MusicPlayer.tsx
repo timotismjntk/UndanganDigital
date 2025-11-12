@@ -3,31 +3,17 @@ import { Button } from '@/components/ui/button';
 import { Music, Volume2, VolumeX } from 'lucide-react';
 
 const MusicPlayer = () => {
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     // Create audio element
-    audioRef.current = new Audio('https://raw.githubusercontent.com/timotismjntk/joyful-christmas-invite/refs/heads/main/src/audio/backsound.mp3');
+    audioRef.current = new Audio('./src/audio/backsound.mp3');
     audioRef.current.loop = true;
     audioRef.current.volume = 0.6;
 
-    // Auto-play attempt
-    const playAudio = async () => {
-      try {
-        if (audioRef.current) {
-          await audioRef.current.play();
-          setIsPlaying(true);
-          setHasStarted(true);
-        }
-      } catch (error) {
-        console.log('Auto-play prevented:', error);
-        setHasStarted(true);
-      }
-    };
-
-    playAudio();
+    setHasStarted(true);
 
     return () => {
       if (audioRef.current) {
@@ -42,16 +28,26 @@ const MusicPlayer = () => {
 
     try {
       if (isPlaying) {
+        console.log(audioRef.current)
         audioRef.current.pause();
         setIsPlaying(false);
       } else {
-        await audioRef.current.play();
         setIsPlaying(true);
+        await audioRef.current.play();
       }
     } catch (error) {
       console.error('Error toggling music:', error);
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (audioRef.current && hasStarted) {
+        console.log('Retrying to play audio after delay');
+        toggleMusic();
+      }
+    }, 1000);
+  }, [hasStarted]);
 
   if (!hasStarted) return null;
 

@@ -42,7 +42,7 @@ const EventDetails = () => {
               </div>
               <div>
                 <h3 className="font-semibold text-lg mb-1">Pengkhotbah</h3>
-                <p className="text-foreground/70">Pdt. Dr. Mangapoi Marbun, M.Th.</p>
+                <p className="text-foreground/70">Pdt. Dr. Mangapoi Marbun, M.Th. (Ketua BPD GBI SUA)</p>
               </div>
             </div>
           </Card>
