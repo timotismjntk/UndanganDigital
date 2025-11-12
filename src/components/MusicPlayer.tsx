@@ -37,6 +37,7 @@ const MusicPlayer = () => {
       }
     } catch (error) {
       console.error('Error toggling music:', error);
+      setIsPlaying(false);
     }
   };
 
@@ -46,7 +47,7 @@ const MusicPlayer = () => {
         console.log('Retrying to play audio after delay');
         toggleMusic();
       }
-    }, 1000);
+    }, 500);
   }, [hasStarted]);
 
   if (!hasStarted) return null;
